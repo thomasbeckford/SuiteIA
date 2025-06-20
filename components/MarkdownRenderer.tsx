@@ -9,6 +9,7 @@ import 'highlight.js/styles/github-dark.css'
 import type { ComponentPropsWithoutRef } from 'react'
 
 export default function MarkdownRenderer({ content }: { content: string }) {
+  const [copied, setCopied] = useState(false)
   return (
     <div className="text-sm leading-snug [&_p]:my-0 [&_pre]:my-2 [&_ul]:my-0 [&_li]:my-0 [&_code]:text-sm">
       <ReactMarkdown
@@ -22,8 +23,6 @@ export default function MarkdownRenderer({ content }: { content: string }) {
           }: ComponentPropsWithoutRef<'code'> & {
             inline?: boolean
           }) => {
-            const [copied, setCopied] = useState(false)
-
             const handleCopy = async () => {
               await navigator.clipboard.writeText(String(children))
               setCopied(true)

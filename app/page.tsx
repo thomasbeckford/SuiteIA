@@ -68,8 +68,12 @@ const useAgentCommunication = () => {
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
 
-    // Simulate AI response
+    // Show typing indicator
+    setPartial("Analyzing your request...");
+
+    // Simulate AI response with streaming
     setTimeout(() => {
+      setPartial(""); // Clear partial message
       setMessages((prev) => [
         ...prev,
         {
@@ -77,7 +81,7 @@ const useAgentCommunication = () => {
           content: `I understand you're asking about: "${text}". This is a great question that requires careful analysis. Let me break this down for you...`,
         },
       ]);
-    }, 1000);
+    }, 2000);
   };
 
   const handleAgentChange = (agentId: string) => {
@@ -92,6 +96,7 @@ const useAgentCommunication = () => {
           }, ${agent.description.toLowerCase()}. How can I help you today?`,
         },
       ]);
+      setPartial(""); // Clear any partial messages when switching agents
     }
   };
 

@@ -1,116 +1,8 @@
 "use client";
 
-import {
-  Bot,
-  Brain,
-  LucideIcon,
-  Send,
-  Sparkles,
-  User,
-  Zap,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-
-// Types
-interface Agent {
-  id: string;
-  name: string;
-  description: string;
-  icon: LucideIcon;
-}
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
-
-// Mock hook for demonstration - replace with your actual hook
-const useAgentCommunication = () => {
-  const [selectedAgent, setSelectedAgent] = useState<Agent>({
-    id: "thomas",
-    name: "Thomas AI",
-    description: "Advanced reasoning and analysis specialist",
-    icon: Brain,
-  });
-
-  const [input, setInput] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content:
-        "Hello! I'm Thomas AI, ready to help you with complex analysis and reasoning tasks. What can I assist you with today?",
-    },
-  ]);
-  const [partial, setPartial] = useState<string>("");
-
-  const agents: Agent[] = [
-    {
-      id: "thomas",
-      name: "Thomas AI",
-      description: "Advanced reasoning and analysis specialist",
-      icon: Brain,
-    },
-    {
-      id: "creative",
-      name: "Creative AI",
-      description: "Content creation and artistic tasks",
-      icon: Sparkles,
-    },
-    {
-      id: "technical",
-      name: "Tech AI",
-      description: "Programming and technical solutions",
-      icon: Zap,
-    },
-  ];
-
-  const sendMessage = (text: string) => {
-    setMessages((prev) => [...prev, { role: "user", content: text }]);
-    setInput("");
-
-    // Show typing indicator
-    setPartial("Analyzing your request...");
-
-    // Simulate AI response with streaming
-    setTimeout(() => {
-      setPartial(""); // Clear partial message
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: `I understand you're asking about: "${text}". This is a great question that requires careful analysis. Let me break this down for you...`,
-        },
-      ]);
-    }, 2000);
-  };
-
-  const handleAgentChange = (agentId: string) => {
-    const agent = agents.find((a) => a.id === agentId);
-    if (agent) {
-      setSelectedAgent(agent);
-      setMessages([
-        {
-          role: "assistant",
-          content: `Hello! I'm ${
-            agent.name
-          }, ${agent.description.toLowerCase()}. How can I help you today?`,
-        },
-      ]);
-      setPartial(""); // Clear any partial messages when switching agents
-    }
-  };
-
-  return {
-    agents,
-    selectedAgent,
-    handleAgentChange,
-    messages,
-    partial,
-    input,
-    setInput,
-    sendMessage,
-  };
-};
+import { useAgentCommunication } from "@/hooks/useAgentComunication";
+import { Bot, Send, Sparkles, User } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface MarkdownRendererProps {
   content: string;
@@ -124,13 +16,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
 
 export default function SuiteIA() {
   const {
-    agents,
     selectedAgent,
-    handleAgentChange,
+    agents,
     messages,
     partial,
     input,
     setInput,
+    handleAgentChange,
     sendMessage,
   } = useAgentCommunication();
 
@@ -202,6 +94,7 @@ export default function SuiteIA() {
             {agents.map((agent) => {
               const IconComponent = agent.icon;
               const isSelected = selectedAgent.id === agent.id;
+
               return (
                 <button
                   key={agent.id}
@@ -253,40 +146,42 @@ export default function SuiteIA() {
 
             {/* Messages Area */}
             <div className="h-96 overflow-y-auto p-6 space-y-4 custom-scrollbar">
-              {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex gap-4 ${
-                    msg.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {msg.role === "assistant" && (
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                      <Bot className="w-4 h-4 text-white" />
-                    </div>
-                  )}
-
+              {messages
+                .filter((msg) => msg.role !== "system") // Filter out system messages from display
+                .map((msg, i) => (
                   <div
-                    className={`max-w-[80%] rounded-2xl p-4 ${
-                      msg.role === "user"
-                        ? "bg-gradient-to-br from-purple-600 to-pink-600 text-white ml-12 shadow-lg shadow-purple-500/25"
-                        : "bg-white/10 text-gray-100 backdrop-blur-sm border border-white/10"
-                    } transition-all duration-300 hover:shadow-lg`}
+                    key={i}
+                    className={`flex gap-4 ${
+                      msg.role === "user" ? "justify-end" : "justify-start"
+                    }`}
                   >
-                    {msg.role === "assistant" ? (
-                      <MarkdownRenderer content={msg.content} />
-                    ) : (
-                      <p className="whitespace-pre-wrap">{msg.content}</p>
+                    {msg.role === "assistant" && (
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center shadow-lg">
+                        <Bot className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+
+                    <div
+                      className={`max-w-[80%] rounded-2xl p-4 ${
+                        msg.role === "user"
+                          ? "bg-gradient-to-br from-purple-600 to-pink-600 text-white ml-12 shadow-lg shadow-purple-500/25"
+                          : "bg-white/10 text-gray-100 backdrop-blur-sm border border-white/10"
+                      } transition-all duration-300 hover:shadow-lg`}
+                    >
+                      {msg.role === "assistant" ? (
+                        <MarkdownRenderer content={msg.content} />
+                      ) : (
+                        <p className="whitespace-pre-wrap">{msg.content}</p>
+                      )}
+                    </div>
+
+                    {msg.role === "user" && (
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-500 flex items-center justify-center shadow-lg">
+                        <User className="w-4 h-4 text-white" />
+                      </div>
                     )}
                   </div>
-
-                  {msg.role === "user" && (
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-orange-500 flex items-center justify-center shadow-lg">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
-                  )}
-                </div>
-              ))}
+                ))}
 
               {partial && (
                 <div className="flex gap-4 justify-start">
@@ -294,15 +189,7 @@ export default function SuiteIA() {
                     <Bot className="w-4 h-4 text-white" />
                   </div>
                   <div className="max-w-[80%] rounded-2xl p-4 bg-white/10 text-gray-300 backdrop-blur-sm border border-white/10">
-                    <div className="flex items-center gap-2">
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce delay-100"></div>
-                        <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-200"></div>
-                      </div>
-                      <span className="text-sm">Thinking...</span>
-                    </div>
-                    <p className="mt-2">{partial}</p>
+                    <MarkdownRenderer content={partial} />
                   </div>
                 </div>
               )}

@@ -1,8 +1,11 @@
+import { Bot, Code, Music, Target, Zap } from "lucide-react";
+
 const agents = [
   {
-    id: 'engineer',
-    name: '🧠 Engineer',
-    description: 'Expert in frontend and backend development.',
+    id: "engineer",
+    name: "Engineer",
+    description: "Expert in frontend and backend development.",
+    icon: Code,
     context: `
 You are a senior fullstack engineer with expertise in React, Next.js, Astro, Tailwind CSS, TypeScript, Prisma, and Docker.
 
@@ -11,9 +14,10 @@ When responding, prioritize clarity, brevity, and practical value. Always use Ma
 Focus on solving real-world development problems, improving code quality, debugging, or proposing scalable and modern solutions. Avoid over-explaining unless asked to elaborate.`,
   },
   {
-    id: 'guitar',
-    name: '🎸 Guitar',
-    description: 'Expert in guitar theory, technique, gear, and tone design.',
+    id: "guitar",
+    name: "Guitar",
+    description: "Expert in guitar theory, technique, gear, and tone design.",
+    icon: Music,
     context: `
 You are a professional guitarist and instructor with experience in both studio and live performance.
 
@@ -28,9 +32,10 @@ When asked, you can:
 Use Markdown formatting where needed. Be practical, structured, and inspiring, but never vague.`,
   },
   {
-    id: 'coach',
-    name: '🧘 Coach',
-    description: 'For focus, discipline, motivation, and emotional control.',
+    id: "coach",
+    name: "Coach",
+    description: "For focus, discipline, motivation, and emotional control.",
+    icon: Target,
     context: `
 You are a high-performance mental coach who works with athletes, musicians, and creatives.
 
@@ -42,10 +47,11 @@ Your goal is to help users build:
 Always respond with empathy but clarity. Give specific, actionable advice that can be applied **immediately**. Avoid generic motivational quotes. Use analogies from sports, training, or real life when helpful.`,
   },
   {
-    id: 'boxing',
-    name: '🥊 Boxing',
+    id: "boxing",
+    name: "Boxing",
     description:
-      'Expert in boxing technique, training, tactics, and equipment.',
+      "Expert in boxing technique, training, tactics, and equipment.",
+    icon: Zap,
     context: `
 You are a professional boxing coach with deep knowledge in technique, conditioning, sparring, and fight strategy.
 
@@ -58,10 +64,11 @@ You can:
 Always be direct and specific. Include step-by-step breakdowns when needed. Focus on solutions, not theory.`,
   },
   {
-    id: 'ai',
-    name: '🤖 AI / LLMs',
+    id: "ai",
+    name: "AI / LLMs",
     description:
-      'Specialist in large language models, APIs, and applied AI systems.',
+      "Specialist in large language models, APIs, and applied AI systems.",
+    icon: Bot,
     context: `
 You are an expert in applied AI and LLMs, with hands-on experience using tools like OpenAI, Anthropic, and HuggingFace.
 
@@ -74,6 +81,6 @@ When relevant, provide code snippets (\`\`\`ts or \`\`\`py) and real-world examp
 
 Always be concise, practical, and honest about limitations. Avoid buzzwords. Focus on what **works today** and how to implement it.`,
   },
-]
+];
 
-export default agents
+export default agents;
